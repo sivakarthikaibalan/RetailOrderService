@@ -39,4 +39,14 @@ public class OrderController {
         return orderSummary;
 
     }
+    //Endpoint to get a particular order using the order ID
+    @GetMapping("/getOrder")
+    private OrderSummary getOrder(@RequestParam(value = "orderId") String orderId){
+        return ordersList.get(orderId);
+    }
+    //Endpoint to get all orders
+    @GetMapping("/getAllOrders")
+    private Object getAllOrders(){
+        return ordersList.values();
+    }
 }

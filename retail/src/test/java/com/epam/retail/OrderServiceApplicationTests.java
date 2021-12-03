@@ -1,6 +1,7 @@
 package com.epam.retail;
 
 import com.epam.retail.controller.OrderController;
+import org.json.JSONObject;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
@@ -9,6 +10,7 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
+import org.springframework.test.web.servlet.ResultActions;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 
 import static org.hamcrest.Matchers.containsString;
@@ -62,6 +64,31 @@ class OrderServiceApplicationTests {
 		mockMvc.perform(post(uri))
 				.andExpect(status().isOk()).andExpect(content().string(containsString("\"grandTotal\":0.0")));
 
+	}
+	@Test
+	void getOneOrder() throws Exception {
+		String uri = "/newOrder?orange=2";
+		MvcResult mvcResult = mockMvc.perform(post(uri))
+				.andExpect(status().isOk()).andExpect(content().string(containsString("\"grandTotal\":0.5"))).andReturn();
+		JSONObject order = new JSONObject(mvcResult.getResponse().getContentAsString());
+		System.out.println(mvcResult.getResponse());
+		String orderId = order.getString("orderId");
+		uri = "/getOrder?orderId="+orderId;
+		mockMvc.perform(get(uri))
+				.andExpect(status().isOk()).andExpect(content().string(containsString("\"grandTotal\":0.5")));
+	}
+
+	@Test
+	void getAllOrders() throws Exception {
+		String uri = "/newOrder?orange=2";
+		mockMvc.perform(post(uri))
+				.andExpect(status().isOk()).andExpect(content().string(containsString("\"grandTotal\":0.5")));
+		uri = "/newOrder?apple=2";
+		mockMvc.perform(post(uri))
+				.andExpect(status().isOk()).andExpect(content().string(containsString("\"grandTotal\":0.6")));
+		uri = "/getAllOrders";
+		mockMvc.perform(get(uri))
+				.andExpect(status().isOk()).andExpect(content().string(containsString("\"grandTotal\":0.5"))).andExpect(content().string(containsString("\"grandTotal\":0.6")));
 	}
 
 }
