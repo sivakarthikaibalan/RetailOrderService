@@ -22,10 +22,45 @@ class OrderServiceApplicationTests {
 	@Autowired
 	private MockMvc mockMvc;
 	@Test
-	void contextLoads() throws Exception {
+	void noDiscounts() throws Exception {
 		String uri = "/newOrder?apple=1&orange=2";
 		mockMvc.perform(post(uri))
 				.andExpect(status().isOk()).andExpect(content().string(containsString("\"grandTotal\":1.1")));
+
+	}
+	@Test
+	void appleDiscounts() throws Exception {
+		String uri = "/newOrder?apple=2&orange=2";
+		mockMvc.perform(post(uri))
+				.andExpect(status().isOk()).andExpect(content().string(containsString("\"grandTotal\":1.1")));
+
+	}
+	@Test
+	void orangeDiscounts() throws Exception {
+		String uri = "/newOrder?apple=2&orange=3";
+		mockMvc.perform(post(uri))
+				.andExpect(status().isOk()).andExpect(content().string(containsString("\"grandTotal\":1.1")));
+
+	}
+	@Test
+	void noOrange() throws Exception {
+		String uri = "/newOrder?apple=2";
+		mockMvc.perform(post(uri))
+				.andExpect(status().isOk()).andExpect(content().string(containsString("\"grandTotal\":0.6")));
+
+	}
+	@Test
+	void noApple() throws Exception {
+		String uri = "/newOrder?orange=2";
+		mockMvc.perform(post(uri))
+				.andExpect(status().isOk()).andExpect(content().string(containsString("\"grandTotal\":0.5")));
+
+	}
+	@Test
+	void noAppleOrange() throws Exception {
+		String uri = "/newOrder?";
+		mockMvc.perform(post(uri))
+				.andExpect(status().isOk()).andExpect(content().string(containsString("\"grandTotal\":0.0")));
 
 	}
 

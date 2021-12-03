@@ -4,7 +4,7 @@ public class ItemEntry {
 
     private String itemName;
     double itemRate;
-    double itemQuantity;
+    int itemQuantity;
     double itemTotal;
 
 
@@ -32,15 +32,15 @@ public class ItemEntry {
         this.itemTotal = itemTotal;
     }
 
-    public double getItemQuantity() {
+    public int getItemQuantity() {
         return itemQuantity;
     }
 
-    public void setItemQuantity(double itemQuantity) {
+    public void setItemQuantity(int itemQuantity) {
         this.itemQuantity = itemQuantity;
     }
 
-    public ItemEntry(String itemName, double itemRate, double itemTotal, double itemQuantity) {
+    public ItemEntry(String itemName, double itemRate, double itemTotal, int itemQuantity) {
         this.itemName = itemName;
         this.itemRate = itemRate;
         this.itemTotal = itemTotal;

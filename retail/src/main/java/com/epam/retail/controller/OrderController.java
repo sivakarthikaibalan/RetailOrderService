@@ -13,19 +13,27 @@ public class OrderController {
     double orangeRate = 0.25;
     Map<String, OrderSummary> ordersList = new HashMap<>();
 
+    // Endpoint for creating new order
     @PostMapping("/newOrder")
-    private OrderSummary receiveOrders(@RequestParam(value = "apple", defaultValue = "0.0") double apple, @RequestParam(value = "orange", defaultValue = "0.0") double orange) {
+    private OrderSummary receiveOrders(@RequestParam(value = "apple", defaultValue = "0") int apple, @RequestParam(value = "orange", defaultValue = "0") int orange) {
         List<ItemEntry> itemEntryList = new ArrayList<>();
         double grandTotal = 0;
+        // if the apple quantity is 0, or it is not given in the order ignore adding it to the summary
         if (!(apple <= 0)) {
-            itemEntryList.add(new ItemEntry("Apples", appleRate, appleRate * apple, apple));
-            grandTotal += appleRate * apple;
+            int disCounterQuantity = apple>1?apple/2 + apple%2:apple;
+            itemEntryList.add(new ItemEntry("Apples", appleRate, appleRate * disCounterQuantity, apple));
+            //amending grand total with each item total
+            grandTotal += appleRate * disCounterQuantity;
         }
+        // if the orange quantity is 0, or it is not given in the order ignore adding it to the summary
         if (!(orange <= 0)) {
-            itemEntryList.add(new ItemEntry("Oranges", orangeRate, orangeRate * orange, orange));
-            grandTotal += orangeRate * orange;
+            int disCounterQuantity = orange/3 * 2 + orange%3;
+            itemEntryList.add(new ItemEntry("Oranges", orangeRate, orangeRate * disCounterQuantity, orange));
+            //amending grand total with each item total
+            grandTotal += orangeRate * disCounterQuantity;
         }
         String orderId = UUID.randomUUID().toString();
+        // Creating final object to be returned
         OrderSummary orderSummary = new OrderSummary(itemEntryList, grandTotal, orderId);
         ordersList.put(orderId, orderSummary);
         return orderSummary;
